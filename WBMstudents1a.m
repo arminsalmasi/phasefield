@@ -1,4 +1,4 @@
-clear variables; close all; clc
+clear variables; clc; %close all;
 
 %setting up the plots for phase field
 figure
@@ -32,58 +32,58 @@ title('phase concentration 1');
 dx = 1e-6; %cell width in meter
 N = 100; %size of the simulation domain in cells
 dt = 1e-3; %time step in seconds
-Nt = 1000; %number of timesteps
+Nt = 100; %number of timesteps
 Pi = 3.1415; %acos(-1)
-% C0 = ..; %initial concentration of phase 0 in at.%
-% C1 = ..; %initial concentration of phase 1 in at.%
+C0 = 13; %initial concentration of phase 0 in at.%
+C1 = 20; %initial concentration of phase 1 in at.%
 epsilon = 1; %constant, forming the coefficient of the non-local energy contribution
 W = 1e12;
 M = 1e-10; %interface mobility in m^4/(Js)
-intfWidth = 1e-7; %interface width in cells
-intfPosition = 1e-6/2; %index of the cell where the interface is located
+intfWidth = 20*dx; %interface width in cells
+intfPosition = 0.9; %index of the cell where the interface is located %% #Armin: where is it used?!!
 % D = ..; %relaxation coefficient of the diffusion equation
 
 %discretised space containing N cells, using dx as space discretisation
 x = 0:dx:(N-1)*dx;
 
 %setting the phase field variable to initial values
-phi(1,1:(N/10)) = 0; 
-phi(1,(N/10)+1:N) = 1; %where should phi be equal to 1?
+phi(1,1:(N*intfPosition)) = 0; 
+phi(1,(N*intfPosition)+1:N) = 1; %where should phi be equal to 1?
 
 %setting initial concentration using the initial phase composition values
-c(1, 1:N/10) = 0; c(1,(N/10)+1:N) =0;
+c(1, 1:N) = phi * C0 + (1-phi) * C1;
 
 %time loop
 for step = 2:Nt
     %using previous state of the phase field variable as starting condition
     %in the current step
     phi(step, 1:N) = phi(step-1, 1:N);
-%     c(step, 1:N) = c(step-1, 1:N);
+     c(step, 1:N) = c(step-1, 1:N);
     %preparing the storage structure for laplace(phi) and laplace(c)
     laplacePhi = x*0;
 %     laplaceMu = x*0;
     
     %setting the driving force
-    dG = G1const(c) - G0const(c);
+    dG = abs(G1const(c(step, 1:N)) - G0const(c(step, 1:N)));
     
     %setting the chemical potential
 %     mu = ..;
     
     %calculating the second spatial derivative of phase field and chemical
     %potential, called laplacePhi and laplaceMu in the code
-    laplacePhi= zeros(1,N); for i = 2:N-1
+    for i = 2:N-1
         laplacePhi(i) = (phi(step,i+1) - 2*phi(step,i) + phi(step,i-1))/(dx*dx);
 %         laplaceMu(i) = (mu(i+1) - 2*mu(i) + mu(i-1))/(dx*dx);
     end
 
     %calculating phase field and concentration increments using the given
     %differential equations
-    phidot(step, 1:N) = M*( epsilon^2*laplacePhi - gPrime(phi(step,:))*W+ g(phi(step,:)) .* dG*36/(20*dx));
+    phidot = M *( epsilon^2 * laplacePhi - gPrime(phi(step,:))*W + g(phi(step,:)) .* dG * 36 / intfWidth );
 %     cdot = ..;
         
     %integrating the phase field and concentration in time from t=(step-1)*dt
     %to t=step*dt
-    phi(step, 1:N) = phi(step-1,1:N) + dt * phidot(step-1,1:N);
+    phi(step, 1:N) = phi(step-1,1:N) + dt * phidot;
 %     c(step, 1:N) = ..;
     
     %setting boundary conditions phase field and for concentration
@@ -117,12 +117,12 @@ end
 
 %constant phase gibbs energy of phase 1
 function [G0c] = G0const(c)
-   G0c = zeros(size(c));
+ G0c = c;
 end
 
 %constant phase gibbs energy of phase 0
 function [G1c] = G1const(c)
-   G1c = zeros(size(c)); G1c = -1e6;
+   G1c = c -1e6;
 end
 
 % %phase gibbs energy of phase 0

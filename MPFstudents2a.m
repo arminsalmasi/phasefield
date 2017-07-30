@@ -1,4 +1,4 @@
-clear all;
+clear variables; clc; %close all;
 
 %setting up the plots for phase field
 figure
@@ -29,49 +29,49 @@ hold on;
 % ylim([9 21])
 title('phase concentration 1');
 
-dx = .. %cell width in meter
-N = .. %size of the simulation domain in cells
-dt = .. %time step in seconds
-Nt = .. %number of timesteps
-intfWidth = ..; %interface width in cells
+dx = 1e-6; %cell width in meter
+N = 100; %size of the simulation domain in cells
+dt = 1e-3; %time step in seconds
+Nt = 100; %number of timesteps
+intfWidth = 20*dx; %interface width in cells
 Pi = 3.1415; %acos(-1)
 % m01 = ..; %slope of the equilibrium line of phase 0 in contact with phase 1 in the linear phase diagram
 % m10 = ..; %slope of the equilibrium line of phase 1 in contact with phase 0 in the linear phase diagram
 % cS = ..; %intersection concentration of the linearised phase diagram
-% C0 = ..; %initial concentration of phase 0 in at.%
-% C1 = ..; %initial concentration of phase 1 in at.%
-sigma = ..; %interface energy in J/m²
-M = ..; %interface mobility in m^4/(Js)
-intfPosition = ..; %index of the cell where the interface is located
+ C0 = 13; %initial concentration of phase 0 in at.%
+ C1 = 20; %initial concentration of phase 1 in at.%
+sigma = 1; %interface energy in J/mï¿½
+M = 1e-10; %interface mobility in m^4/(Js)
+intfPosition = 0.9; %index of the cell where the interface is located %% # Armin: Where is it used?
 % D = ..; %relaxation coefficient of the diffusion equation
 
-% c0(1:Nt, 1:N) = 0;
-% c1 = c0;
+        % c0(1:Nt, 1:N) = 0;
+        % c1 = c0;
 
 %discretised space containing N cells, using dx as space discretisation
 x = 0:dx:(N-1)*dx;
 
 %setting the phase field variable to initial values
-phi(1, 1:N) = 0;
-phi(1, ..) = 1; %where should phi be equal to 1?
+phi(1, 1:N * intfPosition) = 0;
+phi(1, (N * intfPosition)+1:N) = 1; %where should phii be equal to 1?
 
 %setting initial concentration using the initial phase composition values
-% c(1, ..) = ..;
+ c(1, 1:N) = phi * C0 + (1-phi) * C1;
 %setting initial phase concentration using the partitioning function
-% [c0(1, 1:N), c1(1, 1:N)] = partitioning(phi(1, 1:N), c(1, 1:N), m01, m10, cS);
+        % [c0(1, 1:N), c1(1, 1:N)] = partitioning(phi(1, 1:N), c(1, 1:N), m01, m10, cS);
 
 %time loop
 for step = 2:Nt
     %using previous state of the phase field variable as starting condition
     %in the current step
     phi(step, 1:N) = phi(step-1, 1:N);
-%     c(step, 1:N) = c(step-1, 1:N);
+     c(step, 1:N) = c(step-1, 1:N);
     %preparing the storage structure for laplace(phi) and laplace(c)
     laplacePhi = x*0;
 %     laplaceMu = x*0;
     
     %setting the driving force
-    dG = ..;
+    dG = abs(G1const(c(step, 1:N)) - G0const(c(step, 1:N)));
     
     %setting the chemical potential
 %     mu = ..;
@@ -85,13 +85,13 @@ for step = 2:Nt
 
     %calculating phase field and concentration increments using the given
     %differential equations
-    phidot = ..;
-%     cdot = ..;
+        phidot = M * (sigma * ( laplacePhi - gPrime(phi(step,:)) * 27 / (intfWidth^2) ) + phi(step,:) .* (1 - phi(step,:)) .* dG * 6 / intfWidth);
+    %     cdot = ..;
         
     %integrating the phase field and concentration in time from t=(step-1)*dt
     %to t=step*dt
-    phi(step, 1:N) = ..;
-%     c(step, 1:N) = ..;
+    phi(step, 1:N) = phi(step-1,1:N) + dt * phidot;
+    %     c(step, 1:N) = ..;
     
     %setting boundary conditions phase field and for concentration
     phi(step, 1) = phi(step, 2);
@@ -117,19 +117,18 @@ end
 
 %derivative of double well function with respect to phi
 function [gPrimePhi] = gPrime(phi)
-    gPrimePhi = ..;
+    gPrimePhi = 2 * phi(1,:) .* ( 2 * ( phi(1,:) .* phi(1,:) ) - 3 * ( phi(1,:) ) + 1 );
 end
 
 %constant phase gibbs energy of phase 1
 function [G0c] = G0const(c)
-    G0c = ..;
+    G0c = c;
 end
 
 %constant phase gibbs energy of phase 0
 function [G1c] = G1const(c)
-    G1c = ..;
+    G1c = c -1e6;
 end
-
 % %phase gibbs energy of phase 0
 % function [G0c] = G0(c)
 %     G0c = ..;

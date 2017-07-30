@@ -1,0 +1,3 @@
+[submodule "folder"]
+	path = folder
+	url = https://github.com/arminsalmasi/phasefield.git
