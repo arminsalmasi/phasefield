@@ -1,5 +1,15 @@
 clear variables; clc; close all;
 
+%% Armin
+% 1- Please check my comments in 1a, 1b and 2a
+% 2- phase one grows from left to right
+% 3- It looks like that change in c, c0 and c1 follows the grow
+% 4- with Nt=10 (small number of time steps) it is possible to watch the 
+%   growing phase 
+% 5- it looks like there is an impingment at Nt = 20000, the interface
+%   passes the cell limit
+%%
+
 %setting up the plots for phase field
 figure
 phasePlot = subplot(3,2,1);
@@ -32,7 +42,7 @@ title('phase concentration 1');
 dx = 1e-6; %cell width in meter
 N = 100; %size of the simulation domain in cells
 dt = 1e-3; %time step in seconds
-Nt = 100; %number of timesteps
+Nt = 20000; %number of timesteps
 intfWidth = 20*dx; %interface width in cells
 Pi = 3.1415; %acos(-1)
 m01 = 0.7; %slope of the equilibrium line of phase 0 in contact with phase 1 in the linear phase diagram

@@ -1,5 +1,12 @@
 clear variables; close all; clc
 
+%% Armin
+% 1- with Nt=10 (small number of time steps) it is possible to watch the 
+%   growing phase 
+% 2- to my undrestanding main point with the dG is that the shrinking phase
+%   should be at a higher dG in other words growing phase should consume 
+%   the driving force => i use c(1, 1:N) = phi * C0 + (1-phi) * C1;
+%%
 %setting up the plots for phase field
 figure
 phasePlot = subplot(3,2,1);
@@ -32,7 +39,7 @@ title('phase concentration 1');
 dx = 1e-6; %cell width in meter
 N = 100; %size of the simulation domain in cells
 dt = 1e-3; %time step in seconds
-Nt = 100; %number of timesteps
+Nt = 2000; %number of timesteps
 Pi = 3.1415; %acos(-1)
 C0 = 13; %initial concentration of phase 0 in at.%
 C1 = 20; %initial concentration of phase 1 in at.%
@@ -50,7 +57,7 @@ x = 0:dx:(N-1)*dx;
 phi(1,1:(N*intfPosition ))   = 0; 
 phi(1,(N*intfPosition )+1:N) = 1; %where should phi be equal to 1?
 %setting initial concentration using the initial phase composition values
- c(1, 1:N) = phi * C1 + (1-phi) * C0;
+ c(1, 1:N) = phi * C0 + (1-phi) * C1;
 
 %time loop
 for step = 2:Nt

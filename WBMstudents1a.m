@@ -1,4 +1,12 @@
-clear variables; clc; %close all;
+clear variables; clc; close all;
+
+%% Armin
+% 1- which phase is represented by φ, phase 0 or phase 1? It is arbitary,
+%   but everything must be consistence with the first choice
+% 2- which phase will grow, and which will shrink? 
+%   depends on the phidot: considering posetive driving force: then it
+%   depends on the value of dG, W and eta! in this case phase 1 will grow
+%%
 
 %setting up the plots for phase field
 figure
@@ -32,7 +40,7 @@ title('phase concentration 1');
 dx = 1e-6; %cell width in meter
 N = 100; %size of the simulation domain in cells
 dt = 1e-3; %time step in seconds
-Nt = 100; %number of timesteps
+Nt = 1000; %number of timesteps
 Pi = 3.1415; %acos(-1)
 C0 = 13; %initial concentration of phase 0 in at.%
 C1 = 20; %initial concentration of phase 1 in at.%
@@ -144,3 +152,4 @@ end
 % function [MUc] = mu1(c)
 %     MUc = ..;
 % end
+%%

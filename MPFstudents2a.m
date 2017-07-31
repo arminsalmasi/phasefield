@@ -1,5 +1,10 @@
 clear variables; clc; %close all;
 
+%% Armin
+% 1- Please check my comments in 1a and 1b
+% 2- W = 72 * sigma /eta in 1a2a file 
+%%
+
 %setting up the plots for phase field
 figure
 phasePlot = subplot(3,2,1);
@@ -32,7 +37,7 @@ title('phase concentration 1');
 dx = 1e-6; %cell width in meter
 N = 100; %size of the simulation domain in cells
 dt = 1e-3; %time step in seconds
-Nt = 100; %number of timesteps
+Nt = 1000; %number of timesteps
 intfWidth = 20*dx; %interface width in cells
 Pi = 3.1415; %acos(-1)
 % m01 = ..; %slope of the equilibrium line of phase 0 in contact with phase 1 in the linear phase diagram

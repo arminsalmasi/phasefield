@@ -1,5 +1,10 @@
-clear variables; clc; %close all;
+clear variables; clc; close all;
 
+%% Armin
+% 1- Please check my comments in 1a and 1b and 2a
+% 2- this code is a 1a with W = 72 * sigma /eta 
+% to compare: it looks like the growth rate is slower
+%%
 %setting up the plots for phase field
 figure
 phasePlot = subplot(3,2,1);
@@ -32,7 +37,7 @@ title('phase concentration 1');
 dx = 1e-6; %cell width in meter
 N = 100; %size of the simulation domain in cells
 dt = 1e-3; %time step in seconds
-Nt = 100; %number of timesteps
+Nt = 1000; %number of timesteps
 Pi = 3.1415; %acos(-1)
 C0 = 13; %initial concentration of phase 0 in at.%
 C1 = 20; %initial concentration of phase 1 in at.%
