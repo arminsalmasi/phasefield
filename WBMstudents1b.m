@@ -39,7 +39,7 @@ title('phase concentration 1');
 dx = 1e-6; %cell width in meter
 N = 100; %size of the simulation domain in cells
 dt = 1e-3; %time step in seconds
-Nt = 2000; %number of timesteps
+Nt = 20000; %number of timesteps
 Pi = 3.1415; %acos(-1)
 C0 = 13; %initial concentration of phase 0 in at.%
 C1 = 20; %initial concentration of phase 1 in at.%
